@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Discover Destinations — TripWeave{% endblock %}
+
+{% block content %}
+<section id="discover-section" class="section-pane active">
+  <div class="hero-journal">
+    <div class="hero-content">
+      <span class="hero-tag">Smart Travel Planner</span>
+      <h1 class="hero-title">Craft Unforgettable Travel Stories</h1>
+      <p class="hero-subtitle">Organize custom day-by-day itineraries, estimate budget, track packing lists, and record travel memories with ease.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="openCreateTripModal()">+ Plan New Journey</button>
+        <button class="btn btn-white" onclick="switchSection('itinerary')">View Active Timeline</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="summary-card">
+      <div class="card-info">
+        <div class="label">Total Journeys</div>
+        <div class="val" id="stat-total-trips">0</div>
+        <div class="sub-val">Planned & Completed</div>
+      </div>
+      <div class="card-icon-badge">✈️</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="card-info">
+        <div class="label">Upcoming Trips</div>
+        <div class="val" id="stat-active-trips">0</div>
+        <div class="sub-val">Ready for departure</div>
+      </div>
+      <div class="card-icon-badge terracotta">🧭</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="card-info">
+        <div class="label">Estimated Budget</div>
+        <div class="val" id="stat-total-budget">₹0</div>
+        <div class="sub-val">Calculated across activities</div>
+      </div>
+      <div class="card-icon-badge sage">💳</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="card-info">
+        <div class="label">Packing Readiness</div>
+        <div class="val" id="stat-packing-progress">0%</div>
+        <div class="sub-val">Checklist completion</div>
+      </div>
+      <div class="card-icon-badge gold">🧳</div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Explore Curated Destinations</h2>
+      <div class="section-subtitle">Discover handpicked destinations with daily cost estimates and highlights</div>
+    </div>
+  </div>
+
+  <div id="destinations-grid" class="destinations-grid">
+    <!-- Populated dynamically -->
+  </div>
+</section>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof switchSection === 'function') switchSection('discover');
+  });
+</script>
+{% endblock %}

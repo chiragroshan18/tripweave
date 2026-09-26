@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Saved Places & Attractions — TripWeave{% endblock %}
+
+{% block content %}
+<section id="places-section" class="section-pane active">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Saved Places & Attractions</h2>
+      <div class="section-subtitle" id="places-count-badge">Explore bookmarked points of interest and attractions across global destinations</div>
+    </div>
+  </div>
+
+  <div class="category-filter-bar">
+    <button class="cat-pill-btn active" data-cat="all" onclick="filterPlacesByCategory('all')">All Categories</button>
+    <button class="cat-pill-btn" data-cat="Culture" onclick="filterPlacesByCategory('Culture')">🏛️ Culture</button>
+    <button class="cat-pill-btn" data-cat="Nature" onclick="filterPlacesByCategory('Nature')">🌿 Nature</button>
+    <button class="cat-pill-btn" data-cat="Landmark" onclick="filterPlacesByCategory('Landmark')">📍 Landmarks</button>
+    <button class="cat-pill-btn" data-cat="Museum" onclick="filterPlacesByCategory('Museum')">🎨 Museums</button>
+    <button class="cat-pill-btn" data-cat="Beach" onclick="filterPlacesByCategory('Beach')">🏖️ Beaches</button>
+    <button class="cat-pill-btn" data-cat="Adventure" onclick="filterPlacesByCategory('Adventure')">🏔️ Adventure</button>
+    <button class="cat-pill-btn" data-cat="Heritage" onclick="filterPlacesByCategory('Heritage')">🏰 Heritage</button>
+    <button class="cat-pill-btn" data-cat="Shopping" onclick="filterPlacesByCategory('Shopping')">🛍️ Shopping</button>
+  </div>
+
+  <div id="places-grid" class="places-photo-grid">
+    <!-- Populated dynamically via JS -->
+  </div>
+</section>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof switchSection === 'function') switchSection('places');
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}My Journeys — TripWeave{% endblock %}
+
+{% block content %}
+<section id="trips-section" class="section-pane active">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">My Journeys</h2>
+      <div class="section-subtitle">Manage your travel plans, schedules, and active itineraries</div>
+    </div>
+    <button class="btn btn-primary" onclick="openCreateTripModal()">+ Add New Trip</button>
+  </div>
+
+  <div id="trips-list-container">
+    <!-- Populated dynamically via JS -->
+  </div>
+</section>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof switchSection === 'function') switchSection('trips');
+  });
+</script>
+{% endblock %}

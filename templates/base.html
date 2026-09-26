@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}TripWeave — Smart Travel Itinerary & Journey Planner{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="navbar-container">
+      <a href="/" class="brand-logo">
+        <div class="brand-icon">✈️</div>
+        <div>
+          <div class="brand-title">TRIPWEAVE</div>
+          <div class="brand-tagline">Plan the Journey. Shape the Experience.</div>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/discover" class="nav-link" data-section="discover">🧭 Discover</a></li>
+          <li><a href="/trips" class="nav-link" data-section="trips">🗺️ My Journeys</a></li>
+          <li><a href="/itinerary" class="nav-link" data-section="itinerary">📅 Itinerary & Timeline</a></li>
+          <li><a href="/places" class="nav-link" data-section="places">📍 Saved Places</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search-input" class="search-input" placeholder="Search journeys, places...">
+          <div id="search-results-dropdown" class="search-results-dropdown"></div>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateTripModal()">+ New Journey</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    {% block content %}
+    <!-- Sections injected here or toggled dynamically -->
+    {% endblock %}
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div>
+        <div class="footer-brand">TRIPWEAVE</div>
+        <div class="footer-copy">Smart Travel Itinerary & Journey Planner &copy; {{ year if year else '2026' }}. All rights reserved.</div>
+      </div>
+      <div style="display: flex; gap: 1.5rem; font-size: 0.88rem; color: var(--color-muted);">
+        <a href="/discover">Destinations</a>
+        <a href="/trips">Journeys</a>
+        <a href="/itinerary">Timeline</a>
+        <a href="/places">Saved Places</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Slide-Over Overlay & Drawers -->
+  <div id="slide-overlay" class="slide-overlay"></div>
+
+  <!-- Create Trip Drawer -->
+  <div id="panel-create-trip" class="slide-panel">
+    <div class="panel-header">
+      <h3 class="font-heading">Create New Journey</h3>
+      <button class="btn btn-sm btn-outline btn-icon-only" data-close-slide>✕</button>
+    </div>
+    <div class="panel-body">
+      <form onsubmit="submitCreateTrip(event)">
+        <div class="form-group">
+          <label class="form-label">Journey Name</label>
+          <input type="text" name="name" id="trip-name-input" class="form-input" placeholder="e.g. Autumn Adventure in Kyoto" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Select Destination</label>
+          <select name="destination_id" id="trip-dest-select" class="form-select" required></select>
+        </div>
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label class="form-label">Start Date</label>
+            <input type="date" name="start_date" class="form-input" required>
+          </div>
+          <div>
+            <label class="form-label">End Date</label>
+            <input type="date" name="end_date" class="form-input" required>
+          </div>
+        </div>
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label class="form-label">Travelers</label>
+            <input type="number" name="travelers" class="form-input" min="1" value="1" required>
+          </div>
+          <div>
+            <label class="form-label">Travel Style</label>
+            <select name="travel_style" class="form-select">
+              <option value="Culture">Culture</option>
+              <option value="Relaxation">Relaxation</option>
+              <option value="Nature">Nature</option>
+              <option value="Luxury">Luxury</option>
+              <option value="Food">Food</option>
+              <option value="Adventure">Adventure</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Launch Journey</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Activity Drawer -->
+  <div id="panel-add-activity" class="slide-panel">
+    <div class="panel-header">
+      <h3 class="font-heading">Add Activity to Itinerary</h3>
+      <button class="btn btn-sm btn-outline btn-icon-only" data-close-slide>✕</button>
+    </div>
+    <div class="panel-body">
+      <form onsubmit="submitCreateActivity(event)">
+        <div class="form-group">
+          <label class="form-label">Itinerary Day</label>
+          <input type="number" name="day" id="act-day-input" class="form-input" min="1" value="1" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Activity Title</label>
+          <input type="text" name="title" class="form-input" placeholder="e.g. Sunset Boat Tour" required>
+        </div>
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label class="form-label">Time (HH:MM)</label>
+            <input type="text" name="time" class="form-input" placeholder="09:30" required>
+          </div>
+          <div>
+            <label class="form-label">Category</label>
+            <select name="category" class="form-select">
+              <option value="Sightseeing">Sightseeing</option>
+              <option value="Food">Food & Dining</option>
+              <option value="Transport">Transport</option>
+              <option value="Culture">Culture</option>
+              <option value="Leisure">Leisure</option>
+              <option value="Shopping">Shopping</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label class="form-label">Location / Venue</label>
+            <input type="text" name="location" class="form-input" placeholder="e.g. Fort Kochi Beach">
+          </div>
+          <div>
+            <label class="form-label">Duration</label>
+            <input type="text" name="duration" class="form-input" placeholder="e.g. 2 hours">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estimated Cost (₹)</label>
+          <input type="number" name="estimated_cost" class="form-input" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes & Advice</label>
+          <textarea name="notes" class="form-textarea" placeholder="e.g. Book tickets in advance..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Add to Timeline</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Journal Entry Drawer -->
+  <div id="panel-add-journal" class="slide-panel">
+    <div class="panel-header">
+      <h3 class="font-heading">Write Journal Memory</h3>
+      <button class="btn btn-sm btn-outline btn-icon-only" data-close-slide>✕</button>
+    </div>
+    <div class="panel-body">
+      <form onsubmit="submitCreateJournal(event)">
+        <div class="form-group">
+          <label class="form-label">Day Number</label>
+          <input type="number" name="day" class="form-input" min="1" value="1" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Entry Title</label>
+          <input type="text" name="title" class="form-input" placeholder="e.g. Evening by the Backwaters" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Memory Notes</label>
+          <textarea name="content" class="form-textarea" style="min-height: 160px;" placeholder="Write your reflections, stories, and highlights..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Memory</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
